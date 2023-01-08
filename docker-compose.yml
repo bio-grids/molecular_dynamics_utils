@@ -12,6 +12,17 @@ services:
     networks:
       - md_utils_net
 
+  utils_docking:
+    build:
+      context: utils_docking
+      dockerfile: Dockerfile
+    image: firesimulations/utils_docking:2023.1.1
+    container_name: utils_docking
+    tty: true
+    stdin_open: true
+    networks:
+      - md_utils_net
+
 networks:
   md_utils_net:
     driver: bridge
