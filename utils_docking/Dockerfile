@@ -1,4 +1,8 @@
-FROM ubuntu:lunar
+FROM ubuntu:lunar-20221216
+
+LABEL maintainer="DHN Chandan <biogrids.io@gmail.com>"
+LABEL version="2023.1.1"
+LABEL github="https://github.com/bio-grids/molecular_dynamics_utils"
 
 # Update os
 RUN apt-get update -y
