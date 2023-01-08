@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  utils_openbabel:
+    build:
+      context: utils_openbabel
+      dockerfile: Dockerfile
+    image: firesimulations/utils_openbabel:2023.1.1
+    container_name: utils_openbabel
+    tty: true
+    stdin_open: true
+    networks:
+      - md_utils_net
+
+networks:
+  md_utils_net:
+    driver: bridge
