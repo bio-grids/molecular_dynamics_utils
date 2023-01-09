@@ -1,6 +1,6 @@
 ARG IMAGE_VER=2020.06
 
-FROM nvcr.io/hpc/autodock:${IMAGE_VER}}
+FROM nvcr.io/hpc/autodock:${IMAGE_VER}
 
 ARG VERSION=2023.1.1
 
