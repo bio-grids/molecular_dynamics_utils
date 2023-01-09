@@ -11,7 +11,7 @@ env:
   DOCKING_GPU_VERSION: 2023.1.1
   DOCKING_GPU_IMAGE_VER: 2020.06
 
-  RX_DOCKING_CONDA_REPO: firesimulations/utils_rxdocking
+  RX_DOCKING_CONDA_REPO: firesimulations/utils_rxdock
   RX_DOCKING_CONDA_VERSION: 2023.1.1-conda
   RX_DOCKING_CONDA_IMAGE_VER: 22.11.1-alpine
 
@@ -101,7 +101,7 @@ jobs:
           VERSION: ${{env.DOCKING_GPU_VERSION}}
           IMAGE_VER: ${{env.DOCKING_GPU_IMAGE_VER}}
   
-  check-for-existing-rxdocking-image:
+  check-for-existing-rxdock-image:
     runs-on: ubuntu-latest
     name: Check docker for docking tag
     outputs:
@@ -113,11 +113,11 @@ jobs:
         with:
           image: ${{env.RX_DOCKING_CONDA_REPO}}
           tag: ${{env.RX_DOCKING_CONDA_VERSION}}
-  rxdocking-docker:
+  rxdock-docker:
     runs-on: ubuntu-latest
-    name: Build and deploy rxdocking image
-    needs: check-for-existing-rxdocking-image
-    if: needs.check-for-existing-rxdocking-image.outputs.tag-exists != 'true'
+    name: Build and deploy rxdock image
+    needs: check-for-existing-rxdock-image
+    if: needs.check-for-existing-rxdock-image.outputs.tag-exists != 'true'
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -131,7 +131,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: "{{defaultContext}}:utils_rxdocking"
+          context: "{{defaultContext}}:utils_rxdock"
           file: "Dockerfile.conda"
           push: true
           tags: ${{env.RX_DOCKING_CONDA_REPO}}:${{env.RX_DOCKING_CONDA_VERSION}},${{env.RX_DOCKING_CONDA_REPO}}:latest
