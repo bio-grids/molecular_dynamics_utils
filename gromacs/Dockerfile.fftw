@@ -1,0 +1,52 @@
+ARG UBUNTU_VER=lunar-20221216
+
+FROM ubuntu:${UBUNTU_VER}
+
+LABEL maintainer="DHN Chandan <biogrids.io@gmail.com>"
+LABEL version="3.3.10.1"
+LABEL github="https://github.com/bio-grids/molecular_dynamics_utils"
+
+ARG FFTW_VER=3.3.10
+ARG GROMACS_VER=2022.4
+ARG CMAKE_VER=3.25.1
+ARG GCC_VER=11
+ARG CUDA_VER=12.0.0
+ARG OPENMPI_VER=4.1.4
+ARG DEBIAN_FRONTEND=noninteractive
+
+SHELL ["/bin/bash", "-c"]
+
+# update os
+RUN apt-get update -y
+
+# install build dependencies
+ARG build_deps="build-essential ca-certificates g++-$GCC_VER gcc-$GCC_VER file make wget gpg-agent"
+RUN apt-get install --yes --no-install-recommends --quiet $build_deps
+
+# update gcc version
+RUN update-alternatives --install /usr/bin/g++ g++ $(which g++-${GCC_VER}) 30 && \
+    update-alternatives --install /usr/bin/gcc gcc $(which gcc-${GCC_VER}) 30 && \
+    update-alternatives --install /usr/bin/gcov gcov $(which gcov-${GCC_VER}) 30
+
+# install fftw
+WORKDIR /tmp
+RUN wget ftp://ftp.fftw.org/pub/fftw/fftw-${FFTW_VER}.tar.gz
+RUN tar -x -f fftw-${FFTW_VER}.tar.gz -C . -z
+WORKDIR /tmp/fftw-${FFTW_VER}
+RUN CC=gcc CXX=g++ ./configure --prefix=/usr/local --disable-static --enable-avx --enable-avx2 --enable-float --enable-shared --enable-sse2
+RUN make -j$(nproc)
+RUN make -j$(nproc) install
+
+# set env
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+# clean os
+RUN rm -rf /tmp/*
+RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get remove -y $build_deps
+RUN apt-get autoremove -y
+RUN apt-get clean -y
+
+# make data work directory
+RUN cd / && mkdir -p data
+WORKDIR /data

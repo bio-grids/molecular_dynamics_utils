@@ -1,0 +1,59 @@
+ARG UBUNTU_BUILD_VER=22.04
+ARG CUDA_VER=12.0.0
+
+FROM nvidia/cuda:${CUDA_VER}-base-ubuntu${UBUNTU_BUILD_VER}
+
+LABEL maintainer="DHN Chandan <biogrids.io@gmail.com>"
+LABEL version="2022.4"
+LABEL github="https://github.com/bio-grids/molecular_dynamics_utils"
+
+ARG FFTW_VER=3.3.10
+ARG GROMACS_VER=2022.4
+ARG CMAKE_VER=3.25.1
+ARG GCC_VER=11
+ARG CUDA_VER=12.0.0
+ARG OPENMPI_VER=4.1.4
+ARG DEBIAN_FRONTEND=noninteractive
+
+SHELL ["/bin/bash", "-c"]
+
+# update os
+RUN apt-get update -y
+
+# install app dependencies
+ARG app_deps="python3 libgomp1 liblapack3 openmpi-bin openmpi-common openssh-client"
+RUN apt-get install --yes --no-install-recommends --quiet $app_deps
+
+# sdd the fftw3 libraries
+COPY --from=firesimulations/fftw:3.3.10.1 /usr/local/lib /usr/local/lib
+
+# copy compiled dependencies
+COPY --from=firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-sse2     /usr/local/cuda-12.0 /usr/local/cuda-12.0
+COPY --from=firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-sse2    /usr/local/openmpi /usr/local/openmpi
+
+# add the GROMACS configurations
+COPY --from=firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-avx2     /usr/local/gromacs /gromacs
+COPY --from=firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-avx     /usr/local/gromacs /gromacs
+COPY --from=firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-sse2     /usr/local/gromacs /gromacs
+
+# add architecture-detection script
+COPY ./scripts/gmx-chooser /gromacs/bin/gmx
+RUN chmod +x /gromacs/bin/gmx
+
+# set env
+ENV PATH=$PATH:/gromacs/bin
+
+# "docker run --gpu 1" will bind /usr/lib/x86_64-linux-gnu/libcuda.so.1 found by
+# x86_64-linux-gnu.conf, however for non-CUDA execution we'll put this
+# as a fallback to avoid gmx warning messages about missing libcuda.so.1
+RUN echo /usr/local/cuda/compat > /etc/ld.so.conf.d/zz-cuda-compat.conf && ldconfig
+
+# clean os
+RUN rm -rf /tmp/*
+RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get autoremove -y
+RUN apt-get clean -y
+
+# make data work directory
+RUN cd / && mkdir -p data
+WORKDIR /data
