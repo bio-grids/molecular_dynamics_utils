@@ -16,6 +16,9 @@ services:
     build:
       context: utils_docking
       dockerfile: Dockerfile
+      args:
+        - VERSION=2023.1.1
+        - IMAGE_VER=lunar-20221216
     image: firesimulations/utils_docking:2023.1.1
     container_name: utils_docking
     tty: true
@@ -27,6 +30,9 @@ services:
     build:
       context: utils_docking_gpu
       dockerfile: Dockerfile
+      args:
+        - VERSION=2023.1.1
+        - IMAGE_VER=2020.06
     image: firesimulations/utils_docking_gpu:2023.1.1
     container_name: utils_docking_gpu
     tty: true
