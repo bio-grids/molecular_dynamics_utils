@@ -1,7 +1,11 @@
-FROM ubuntu:lunar-20221216
+ARG IMAGE_VER=lunar-20221216
+
+FROM ubuntu:${IMAGE_VER}
+
+ARG VERSION=2023.1.1
 
 LABEL maintainer="DHN Chandan <biogrids.io@gmail.com>"
-LABEL version="2023.1.1"
+LABEL version=${VERSION}
 LABEL github="https://github.com/bio-grids/molecular_dynamics_utils"
 
 # Update os
