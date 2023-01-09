@@ -51,16 +51,33 @@ services:
     networks:
       - md_utils_net
 
-  # utils_rxdock:
-  #   build:
-  #     context: utils_rxdock
-  #     dockerfile: Dockerfile
-  #   image: firesimulations/utils_rxdock:2023.1.1
-  #   container_name: utils_rxdock
-  #   tty: true
-  #   stdin_open: true
-  #   networks:
-  #     - md_utils_net
+  utils_rxdock_conda:
+    build:
+      context: utils_rxdock
+      dockerfile: Dockerfile.conda
+      args:
+        - IMAGE_VER=22.11.1-alpine
+        - VERSION=2023.1.1
+    image: firesimulations/utils_rxdock:2023.1.1-conda
+    container_name: utils_rxdock_conda
+    tty: true
+    stdin_open: true
+    networks:
+      - md_utils_net
+
+  utils_rxdock:
+    build:
+      context: utils_rxdock
+      dockerfile: Dockerfile
+      args:
+        - IMAGE_VER=lunar-20221216
+        - VERSION=2023.1.1
+    image: firesimulations/utils_rxdock:2023.1.1
+    container_name: utils_rxdock
+    tty: true
+    stdin_open: true
+    networks:
+      - md_utils_net
 
   fftw:
     build:
