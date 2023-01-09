@@ -65,7 +65,7 @@ services:
         - GCC_VER=11
         - CUDA_VER=12.0.0
         - OPENMPI_VER=4.1.4
-    image: firesimulations/fftw:3.3.10.1
+    image: firesimulations/fftw:3.3.10
     container_name: fftw
     tty: true
     stdin_open: true
@@ -79,37 +79,37 @@ services:
     networks:
       - md_utils_net
 
-  gromacs-sse2:
-    build:
-      context: gromacs
-      dockerfile: Dockerfile.gmx.sse2
-      args:
-        - UBUNTU_VER=lunar-20221216
-        - UBUNTU_BUILD_VER=22.04
-        - FFTW_VER=3.3.10
-        - GROMACS_VER=2022.4
-        - CMAKE_VER=3.25.1
-        - GCC_VER=11
-        - CUDA_VER=12.0.0
-        - OPENMPI_VER=4.1.4
-    image: firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-sse2
-    container_name: gromacs-sse2
-    tty: true
-    stdin_open: true
-    volumes:
-      - ./data:/data
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
-    networks:
-      - md_utils_net
+  # gromacs-sse2:
+  #   build:
+  #     context: gromacs
+  #     dockerfile: Dockerfile.gmx.sse2
+  #     args:
+  #       - UBUNTU_VER=lunar-20221216
+  #       - UBUNTU_BUILD_VER=22.04
+  #       - FFTW_VER=3.3.10
+  #       - GROMACS_VER=2022.4
+  #       - CMAKE_VER=3.25.1
+  #       - GCC_VER=11
+  #       - CUDA_VER=12.0.0
+  #       - OPENMPI_VER=4.1.4
+  #   image: firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-sse2
+  #   container_name: gromacs-sse2
+  #   tty: true
+  #   stdin_open: true
+  #   volumes:
+  #     - ./data:/data
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - capabilities: [gpu]
+  #   networks:
+  #     - md_utils_net
 
   gromacs:
     build:
       context: gromacs
-      dockerfile: Dockerfile.gmx
+      dockerfile: Dockerfile
       args:
         - UBUNTU_VER=lunar-20221216
         - UBUNTU_BUILD_VER=22.04
