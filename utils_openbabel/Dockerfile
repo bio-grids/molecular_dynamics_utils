@@ -1,7 +1,12 @@
-FROM python:3.11-slim-bullseye
+ARG IMAGE_VER=3.11-slim-bullseye
+
+FROM python:${IMAGE_VER}
+
+ARG VERSION=2023.1.1
+ARG OPENBABEL_VER=3.1.1
 
 LABEL maintainer="DHN Chandan <biogrids.io@gmail.com>"
-LABEL version="2023.1.2"
+LABEL version=${VERSION}
 LABEL github="https://github.com/bio-grids/molecular_dynamics_utils"
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -22,7 +27,7 @@ RUN apt-get install --yes --no-install-recommends --quiet $build_deps
 # install openbabel python library
 RUN pip install --install-option=build_ext \
     --install-option="-I/usr/include/openbabel3" \
-    --install-option="-L/usr/lib/x86_64-linux-gnu/openbabel/3.1.1" \
+    --install-option="-L/usr/lib/x86_64-linux-gnu/openbabel/${OPENBABEL_VER}" \
     openbabel
 
 # for converting python script to binaries
