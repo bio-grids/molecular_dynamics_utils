@@ -1,0 +1,98 @@
+---
+
+name: Build and push autodocking utils
+
+env:
+  DOCKING_REPO: firesimulations/utils_docking
+  DOCKING_VERSION: 2023.1.1
+  DOCKING_IMAGE_VER: lunar-20221216
+
+  DOCKING_GPU_REPO: firesimulations/utils_docking_gpu
+  DOCKING_GPU_VERSION: 2023.1.1
+  DOCKING_GPU_IMAGE_VER: 2020.06
+
+on:
+  push:
+    branches:
+      - 'docker'
+
+jobs:
+  check-for-existing-docking-image:
+    runs-on: ubuntu-latest
+    name: Check docker for docking tag
+    outputs:
+      tag-exists: ${{steps.check-docker.outputs.tag-exists}}
+    steps:
+      - name: Check Docker for Tag
+        id: check-docker
+        uses: hipcamp/docker-tag-exists@v1
+        with:
+          image: ${{env.DOCKING_REPO}}
+          tag: ${{env.DOCKING_VERSION}}
+  docking-docker:
+    runs-on: ubuntu-latest
+    name: Build and deploy docking image
+    needs: check-for-existing-docking-image
+    if: needs.check-for-existing-docking-image.outputs.tag-exists != 'true'
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: "{{defaultContext}}:utils_docking"
+          file: "Dockerfile"
+          push: true
+          tags: ${{env.DOCKING_REPO}}:${{env.DOCKING_VERSION}},${{env.DOCKING_REPO}}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+        env:
+          VERSION: ${{env.DOCKING_VERSION}}
+          IMAGE_VER: ${{env.DOCKING_IMAGE_VER}}
+  
+  check-for-existing-docking-gpu-image:
+    runs-on: ubuntu-latest
+    name: Check docker for docking gpu tag
+    outputs:
+      tag-exists: ${{steps.check-docker.outputs.tag-exists}}
+    steps:
+      - name: Check Docker for Tag
+        id: check-docker
+        uses: hipcamp/docker-tag-exists@v1
+        with:
+          image: ${{env.DOCKING_GPU_REPO}}
+          tag: ${{env.DOCKING_GPU_VERSION}}
+  docking-gpu-docker:
+    runs-on: ubuntu-latest
+    name: Build and deploy docking image
+    needs: check-for-existing-docking-gpu-image
+    if: needs.check-for-existing-docking-gpu-image.outputs.tag-exists != 'true'
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: "{{defaultContext}}:utils_docking_gpu"
+          file: "Dockerfile"
+          push: true
+          tags: ${{env.DOCKING_GPU_REPO}}:${{env.DOCKING_GPU_VERSION}},${{env.DOCKING_GPU_REPO}}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+        env:
+          VERSION: ${{env.DOCKING_GPU_VERSION}}
+          IMAGE_VER: ${{env.DOCKING_GPU_IMAGE_VER}}
