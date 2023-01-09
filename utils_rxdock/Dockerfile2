@@ -1,0 +1,14 @@
+FROM continuumio/miniconda3:22.11.1-alpine
+
+LABEL maintainer="DHN Chandan <biogrids.io@gmail.com>"
+LABEL version="2023.1.1"
+LABEL github="https://github.com/bio-grids/molecular_dynamics_utils"
+
+# install rxdock
+RUN conda install --name base --yes -c bioconda rxdock
+
+# make data work directory
+RUN cd / && mkdir -p data
+WORKDIR /data
+
+# CMD ["conda", "info", "--envs"]
