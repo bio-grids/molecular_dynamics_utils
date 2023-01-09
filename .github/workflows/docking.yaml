@@ -11,6 +11,10 @@ env:
   DOCKING_GPU_VERSION: 2023.1.1
   DOCKING_GPU_IMAGE_VER: 2020.06
 
+  RX_DOCKING_CONDA_REPO: firesimulations/utils_rxdocking
+  RX_DOCKING_CONDA_VERSION: 2023.1.1-conda
+  RX_DOCKING_CONDA_IMAGE_VER: 22.11.1-alpine
+
 on:
   push:
     branches:
@@ -96,3 +100,43 @@ jobs:
         env:
           VERSION: ${{env.DOCKING_GPU_VERSION}}
           IMAGE_VER: ${{env.DOCKING_GPU_IMAGE_VER}}
+  
+  check-for-existing-rxdocking-image:
+    runs-on: ubuntu-latest
+    name: Check docker for docking tag
+    outputs:
+      tag-exists: ${{steps.check-docker.outputs.tag-exists}}
+    steps:
+      - name: Check Docker for Tag
+        id: check-docker
+        uses: hipcamp/docker-tag-exists@v1
+        with:
+          image: ${{env.RX_DOCKING_CONDA_REPO}}
+          tag: ${{env.RX_DOCKING_CONDA_VERSION}}
+  rxdocking-docker:
+    runs-on: ubuntu-latest
+    name: Build and deploy rxdocking image
+    needs: check-for-existing-rxdocking-image
+    if: needs.check-for-existing-rxdocking-image.outputs.tag-exists != 'true'
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: "{{defaultContext}}:utils_rxdocking"
+          file: "Dockerfile.conda"
+          push: true
+          tags: ${{env.RX_DOCKING_CONDA_REPO}}:${{env.RX_DOCKING_CONDA_VERSION}},${{env.RX_DOCKING_CONDA_REPO}}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+        env:
+          VERSION: ${{env.RX_DOCKING_CONDA_VERSION}}
+          IMAGE_VER: ${{env.RX_DOCKING_CONDA_IMAGE_VER}}
