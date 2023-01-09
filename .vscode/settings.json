@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "openbabel",
         "docking",
-        "gromacs"
+        "gromacs",
+        "actions"
     ]
 }
