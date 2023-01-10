@@ -65,20 +65,6 @@ services:
     networks:
       - md_utils_net
 
-  utils_rxdock:
-    build:
-      context: utils_rxdock
-      dockerfile: Dockerfile
-      args:
-        - IMAGE_VER=lunar-20221216
-        - VERSION=2023.1.1
-    image: firesimulations/utils_rxdock:2023.1.1
-    container_name: utils_rxdock
-    tty: true
-    stdin_open: true
-    networks:
-      - md_utils_net
-
   fftw:
     build:
       context: gromacs
