@@ -27,6 +27,9 @@ services:
     container_name: utils_docking
     tty: true
     stdin_open: true
+    volumes:
+      - ./data:/data
+      - ./utils_docking/bin:/ubin
     networks:
       - md_utils_net
 
