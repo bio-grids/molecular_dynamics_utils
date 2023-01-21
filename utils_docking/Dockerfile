@@ -1,6 +1,6 @@
-ARG IMAGE_VER=lunar-20221216
+ARG IMAGE_VER=3.11-slim-bullseye
 
-FROM ubuntu:${IMAGE_VER}
+FROM python:${IMAGE_VER}
 
 ARG VERSION=2023.1.1
 
@@ -12,7 +12,7 @@ LABEL github="https://github.com/bio-grids/molecular_dynamics_utils"
 RUN apt-get update -y
 
 # Install build dependencies
-ARG build_deps="curl ca-certificates"
+ARG build_deps="curl ca-certificates git"
 RUN apt-get install --yes --no-install-recommends --quiet $build_deps
 
 # Install app dependencies
@@ -25,6 +25,14 @@ RUN curl -SL https://ccsb.scripps.edu/adfr/download/1038 | tar -zx
 RUN cd ADFRsuite_x86_64Linux_1.0; ./install.sh -d /opt/adfr/ -c 1 -l
 
 ENV PATH=$PATH:/opt/adfr/bin/
+
+# install AutoDockTools for pyhton3
+RUN git clone https://github.com/Valdes-Tresanco-MS/AutoDockTools_py3.git
+RUN python -m pip install AutoDockTools_py3/.
+
+# install python dependencies
+COPY requirements.txt /tmp/requirements.txt
+RUN python -m pip install -r requirements.txt
 
 # clean os
 RUN rm -rf /tmp/*

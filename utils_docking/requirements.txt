@@ -1,0 +1,4 @@
+numpy
+rich
+inquirer
+typer
