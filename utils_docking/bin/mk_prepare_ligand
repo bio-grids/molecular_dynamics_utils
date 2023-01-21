@@ -1,0 +1,14 @@
+#!/bin/sh
+
+######
+## set environment variables.
+MEEKO_ROOT=$(which mk_prepare_ligand.py)
+export MEEKO_ROOT
+
+######
+## execute meeko prepare command
+if test $# -gt 0; then
+  exec "$MEEKO_ROOT" "$@"
+else
+  exec "$MEEKO_ROOT" -h
+fi
