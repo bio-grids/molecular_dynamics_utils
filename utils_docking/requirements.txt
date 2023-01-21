@@ -1,4 +1,8 @@
 numpy
+scipy
+pandas
+rdkit
+meeko
 rich
 inquirer
 typer
