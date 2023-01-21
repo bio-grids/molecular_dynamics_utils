@@ -4,8 +4,8 @@ name: Build and push autodocking utils
 
 env:
   DOCKING_REPO: firesimulations/utils_docking
-  DOCKING_VERSION: 2023.1.1
-  DOCKING_IMAGE_VER: lunar-20221216
+  DOCKING_VERSION: 2023.1.2
+  DOCKING_IMAGE_VER: 3.11-slim-bullseye
 
   DOCKING_GPU_REPO: firesimulations/utils_docking_gpu
   DOCKING_GPU_VERSION: 2023.1.1
