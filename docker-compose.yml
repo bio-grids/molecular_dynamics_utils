@@ -21,9 +21,9 @@ services:
       context: utils_docking
       dockerfile: Dockerfile
       args:
-        - VERSION=2023.1.1
-        - IMAGE_VER=lunar-20221216
-    image: firesimulations/utils_docking:2023.1.1
+        - VERSION=2023.1.2
+        - IMAGE_VER=3.11-slim-bullseye
+    image: firesimulations/utils_docking:2023.1.2
     container_name: utils_docking
     tty: true
     stdin_open: true
@@ -51,27 +51,27 @@ services:
     networks:
       - md_utils_net
 
-  utils_docking_gpu2:
-    build:
-      context: utils_docking_gpu
-      dockerfile: Dockerfile2
-      args:
-        - VERSION=2023.1.1
-        # - IMAGE_VER=11.8.0-runtime-ubuntu22.04
-        - IMAGE_VER=lunar-20221216
-    image: firesimulations/utils_docking_gpu2:2023.1.1
-    container_name: utils_docking_gpu2
-    tty: true
-    stdin_open: true
-    volumes:
-      - ./data:/data
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
-    networks:
-      - md_utils_net
+  # utils_docking_gpu2:
+  #   build:
+  #     context: utils_docking_gpu
+  #     dockerfile: Dockerfile2
+  #     args:
+  #       - VERSION=2023.1.1
+  #       # - IMAGE_VER=11.8.0-runtime-ubuntu22.04
+  #       - IMAGE_VER=lunar-20221216
+  #   image: firesimulations/utils_docking_gpu2:2023.1.1
+  #   container_name: utils_docking_gpu2
+  #   tty: true
+  #   stdin_open: true
+  #   volumes:
+  #     - ./data:/data
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - capabilities: [gpu]
+  #   networks:
+  #     - md_utils_net
 
   utils_rxdock_conda:
     build:
