@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+import os
+import typer
+from rdkit import Chem
+from meeko import MoleculePreparation
+
+app = typer.Typer()
+
+
+@app.command()
+def hello(name: str):
+    print(f"Hello {name}")
+
+
+@app.command()
+def convert(ligand_name: str):
+    cwd = os.getcwd()
+    print(f"[dir] current dir: {cwd}")
+    data_dir = os.path.join("/", "data")
+    print(f"[dir] data dir: {data_dir}")
+    ligand_dir = os.path.join(data_dir, "ligands")
+    print(f"[dir] ligand dir: {ligand_dir}")
+    
+    os.chdir(ligand_dir)
+    
+    for index, mol in enumerate(Chem.SDMolSupplier(f"{ligand_name}", removeHs=False)):
+            mol = Chem.AddHs(mol, addCoords=True)
+            etkdgv3 = Chem.rdDistGeom.ETKDGv3()
+            Chem.rdDistGeom.EmbedMolecule(mol, etkdgv3)
+            Chem.rdForceFieldHelpers.UFFOptimizeMolecule(mol)
+            preparator = MoleculePreparation(hydrate=False)
+            preparator.prepare(mol)
+            preparator.show_setup() # optional
+            preparator.write_pdbqt_file(f"{ligand_name}_{index+1}.pdbqt")
+            pdbqt_string = preparator.write_pdbqt_string()
+            
+    return True
+    
+
+if __name__ == "__main__":
+    app()
