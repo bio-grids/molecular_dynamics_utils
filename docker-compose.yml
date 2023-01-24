@@ -53,6 +53,27 @@ services:
             - capabilities: [gpu]
     networks:
       - md_utils_net
+  
+  utils_docking_master:
+    build:
+      context: utils_docking_gpu
+      dockerfile: Dockerfile.master
+      args:
+        - VERSION=2023.1.1
+        - IMAGE_VER=2020.06
+    image: firesimulations/utils_docking_master:2023.1.1
+    container_name: utils_docking_master
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./data:/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    networks:
+      - md_utils_net
 
   # utils_docking_gpu2:
   #   build:
