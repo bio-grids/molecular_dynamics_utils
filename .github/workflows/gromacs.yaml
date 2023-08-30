@@ -8,7 +8,7 @@ env:
     GROMACS_VER: 2023.2
     CMAKE_VER: 3.27.2
     GCC_VER: 11
-    CUDA_VER: 12.2.2
+    CUDA_VER: 12.2.0
     OPENMPI_VER: 4.1.5
     UBUNTU_VER: lunar-20230731
     UBUNTU_BUILD_VER: 22.04
@@ -70,7 +70,7 @@ jobs:
                   tag: gmx-${{env.GROMACS_VER}}-cuda-${{env.CUDA_VER}}
     gromacs-docker:
         runs-on: ubuntu-latest
-        name: Build and deploy fftw image
+        name: Build and deploy gromacs image
         needs: check-for-existing-gromacs-image
         if: needs.check-for-existing-gromacs-image.outputs.tag-exists != 'true'
         steps:
