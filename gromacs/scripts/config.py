@@ -20,9 +20,9 @@ SIMD_MAPPER = dict(zip(ENGINE_OPTIONS['simd'], GMX_BINARY_DIRECTORY_SUFFIX))
 # Minimum Software Version
 
 # Default Software version
-DEFAULT_GROMACS_VERSION = '2022.4'
+DEFAULT_GROMACS_VERSION = '2023.2'
 DEFAULT_GCC_VERSION = '11'
-DEFAULT_CMAKE_VERSION = '3.25.1'
+DEFAULT_CMAKE_VERSION = '3.27.2'
 
 
 # minimum required software version

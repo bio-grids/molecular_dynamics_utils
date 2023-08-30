@@ -1,5 +1,5 @@
 ARG UBUNTU_BUILD_VER=22.04
-ARG CUDA_VER=12.0.0
+ARG CUDA_VER=12.2.0
 
 FROM nvidia/cuda:${CUDA_VER}-base-ubuntu${UBUNTU_BUILD_VER}
 
@@ -8,11 +8,11 @@ LABEL version="2022.4"
 LABEL github="https://github.com/bio-grids/molecular_dynamics_utils"
 
 ARG FFTW_VER=3.3.10
-ARG GROMACS_VER=2022.4
-ARG CMAKE_VER=3.25.1
+ARG GROMACS_VER=2023.2
+ARG CMAKE_VER=3.27.2
 ARG GCC_VER=11
-ARG CUDA_VER=12.0.0
-ARG OPENMPI_VER=4.1.4
+ARG CUDA_VER=12.2.0
+ARG OPENMPI_VER=4.1.5
 ARG DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-c"]
