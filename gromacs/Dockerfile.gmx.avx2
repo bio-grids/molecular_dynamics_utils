@@ -1,5 +1,5 @@
 ARG UBUNTU_BUILD_VER=22.04
-ARG CUDA_VER=12.2.0
+ARG CUDA_VER=12.2.2
 
 FROM nvidia/cuda:${CUDA_VER}-devel-ubuntu${UBUNTU_BUILD_VER} AS openmpi
 
@@ -7,7 +7,7 @@ ARG FFTW_VER=3.3.10
 ARG GROMACS_VER=2023.2
 ARG CMAKE_VER=3.27.2
 ARG GCC_VER=11
-ARG CUDA_VER=12.2.0
+ARG CUDA_VER=12.2.2
 ARG OPENMPI_VER=4.1.5
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -52,11 +52,11 @@ ENV PATH=/usr/local/bin:$PATH
 FROM nvidia/cuda:${CUDA_VER}-devel-ubuntu${UBUNTU_BUILD_VER} AS gromacs
 
 ARG FFTW_VER=3.3.10
-ARG GROMACS_VER=2022.4
-ARG CMAKE_VER=3.25.1
+ARG GROMACS_VER=2023.2
+ARG CMAKE_VER=3.27.2
 ARG GCC_VER=11
-ARG CUDA_VER=12.0.0
-ARG OPENMPI_VER=4.1.4
+ARG CUDA_VER=12.2.2
+ARG OPENMPI_VER=4.1.5
 ARG DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-c"]
@@ -84,8 +84,8 @@ RUN /bin/sh cmake-${CMAKE_VER}-linux-x86_64.sh --prefix=/usr/local --skip-licens
 ENV PATH=/usr/local/bin:$PATH
 
 # copy from firesimulations fftw image
-COPY --from=firesimulations/fftw:3.3.10.1 /usr/local/lib /usr/local/fftw/lib/
-COPY --from=firesimulations/fftw:3.3.10.1 /usr/local/include /usr/local/fftw/include/
+COPY --from=firesimulations/fftw:3.3.10 /usr/local/lib /usr/local/fftw/lib/
+COPY --from=firesimulations/fftw:3.3.10 /usr/local/include /usr/local/fftw/include/
 
 # set env
 ENV CMAKE_PREFIX_PATH=/usr/local/fftw:$CMAKE_PREFIX_PATH
@@ -137,15 +137,15 @@ RUN rm -rf /tmp/gromacs-${GROMACS_VER} /tmp/gromacs-${GROMACS_VER}.tar.gz
 FROM nvidia/cuda:${CUDA_VER}-runtime-ubuntu${UBUNTU_BUILD_VER}
 
 LABEL maintainer="DHN Chandan <biogrids.io@gmail.com>"
-LABEL version="2022.4"
+LABEL version="2023.2"
 LABEL github="https://github.com/bio-grids/molecular_dynamics_utils"
 
 ARG FFTW_VER=3.3.10
-ARG GROMACS_VER=2022.4
-ARG CMAKE_VER=3.25.1
+ARG GROMACS_VER=2023.2
+ARG CMAKE_VER=3.27.2
 ARG GCC_VER=11
-ARG CUDA_VER=12.0.0
-ARG OPENMPI_VER=4.1.4
+ARG CUDA_VER=12.2.2
+ARG OPENMPI_VER=4.1.5
 ARG DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-c"]
@@ -163,8 +163,8 @@ ARG app_deps="python3 libgomp1 hwloc openssh-client"
 RUN apt-get install --yes --no-install-recommends --quiet $app_deps
 
 # copy from firesimulations fftw image
-COPY --from=firesimulations/fftw:3.3.10.1 /usr/local/lib /usr/local/fftw/lib/
-COPY --from=firesimulations/fftw:3.3.10.1 /usr/local/include /usr/local/fftw/include/
+COPY --from=firesimulations/fftw:3.3.10 /usr/local/lib /usr/local/fftw/lib/
+COPY --from=firesimulations/fftw:3.3.10 /usr/local/include /usr/local/fftw/include/
 
 # set env
 ENV LD_LIBRARY_PATH=/usr/local/fftw/lib:$LD_LIBRARY_PATH

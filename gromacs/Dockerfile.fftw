@@ -1,16 +1,16 @@
-ARG UBUNTU_VER=lunar-20221216
+ARG UBUNTU_VER=lunar-20230731
 
 FROM ubuntu:${UBUNTU_VER}
 
 LABEL maintainer="DHN Chandan <biogrids.io@gmail.com>"
-LABEL version="3.3.10.1"
+LABEL version="3.3.10"
 LABEL github="https://github.com/bio-grids/molecular_dynamics_utils"
 
 ARG FFTW_VER=3.3.10
 ARG GROMACS_VER=2023.2
 ARG CMAKE_VER=3.27.2
 ARG GCC_VER=11
-ARG CUDA_VER=12.2.0
+ARG CUDA_VER=12.2.2
 ARG OPENMPI_VER=4.1.5
 ARG DEBIAN_FRONTEND=noninteractive
 

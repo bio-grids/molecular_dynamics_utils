@@ -1,5 +1,5 @@
 ARG UBUNTU_BUILD_VER=22.04
-ARG CUDA_VER=12.2.0
+ARG CUDA_VER=12.2.2
 
 FROM nvidia/cuda:${CUDA_VER}-devel-ubuntu${UBUNTU_BUILD_VER} AS openmpi
 
@@ -7,7 +7,7 @@ ARG FFTW_VER=3.3.10
 ARG GROMACS_VER=2023.2
 ARG CMAKE_VER=3.27.2
 ARG GCC_VER=11
-ARG CUDA_VER=12.2.0
+ARG CUDA_VER=12.2.2
 ARG OPENMPI_VER=4.1.5
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -55,7 +55,7 @@ ARG FFTW_VER=3.3.10
 ARG GROMACS_VER=2023.2
 ARG CMAKE_VER=3.27.2
 ARG GCC_VER=11
-ARG CUDA_VER=12.2.0
+ARG CUDA_VER=12.2.2
 ARG OPENMPI_VER=4.1.5
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -136,14 +136,14 @@ RUN rm -rf /tmp/gromacs-${GROMACS_VER} /tmp/gromacs-${GROMACS_VER}.tar.gz
 FROM nvidia/cuda:${CUDA_VER}-runtime-ubuntu${UBUNTU_BUILD_VER}
 
 LABEL maintainer="DHN Chandan <biogrids.io@gmail.com>"
-LABEL version="2022.4"
+LABEL version="2023.2"
 LABEL github="https://github.com/bio-grids/molecular_dynamics_utils"
 
 ARG FFTW_VER=3.3.10
 ARG GROMACS_VER=2023.2
 ARG CMAKE_VER=3.27.2
 ARG GCC_VER=11
-ARG CUDA_VER=12.2.0
+ARG CUDA_VER=12.2.2
 ARG OPENMPI_VER=4.1.5
 ARG DEBIAN_FRONTEND=noninteractive
 

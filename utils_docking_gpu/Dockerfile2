@@ -1,4 +1,4 @@
-ARG IMAGE_VER=lunar-20221216
+ARG IMAGE_VER=lunar-20230731
 
 FROM ubuntu:${IMAGE_VER}
 
@@ -23,13 +23,11 @@ RUN apt-get install --yes --no-install-recommends --quiet $build_deps
 WORKDIR /tmp
 RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
 RUN mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
-RUN wget https://developer.download.nvidia.com/compute/cuda/12.0.0/local_installers/cuda-repo-ubuntu2204-12-0-local_12.0.0-525.60.13-1_amd64.deb
-RUN dpkg -i cuda-repo-ubuntu2204-12-0-local_12.0.0-525.60.13-1_amd64.deb
-RUN cp /var/cuda-repo-ubuntu2204-12-0-local/cuda-*-keyring.gpg /usr/share/keyrings/
+RUN wget https://developer.download.nvidia.com/compute/cuda/12.2.2/local_installers/cuda-repo-ubuntu2204-12-2-local_12.2.2-535.104.05-1_amd64.deb
+RUN dpkg -i cuda-repo-ubuntu2204-12-2-local_12.2.2-535.104.05-1_amd64.deb
+RUN cp /var/cuda-repo-ubuntu2204-12-2-local/cuda-*-keyring.gpg /usr/share/keyrings/
 RUN apt-get update
 RUN apt-get -y install cuda
-# RUN wget https://developer.download.nvidia.com/compute/cuda/12.0.0/local_installers/cuda_12.0.0_525.60.13_linux.run
-# RUN sh cuda_12.0.0_525.60.13_linux.run
 
 # Install app dependencies
 ARG app_deps="libboost-all-dev"

@@ -1,197 +1,197 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  utils_openbabel:
-    build:
-      context: utils_openbabel
-      dockerfile: Dockerfile
-      args:
-        - VERSION=2023.1.2
-        - IMAGE_VER=3.11-slim-bullseye
-        - OPENBABEL_VER=3.1.1
-    image: firesimulations/utils_openbabel:2023.1.2
-    container_name: utils_openbabel
-    tty: true
-    stdin_open: true
-    networks:
-      - md_utils_net
+    utils_openbabel:
+        build:
+            context: utils_openbabel
+            dockerfile: Dockerfile
+            args:
+                - VERSION=2023.1.2
+                - IMAGE_VER=3.11-slim-bullseye
+                - OPENBABEL_VER=3.1.1
+        image: firesimulations/utils_openbabel:2023.1.2
+        container_name: utils_openbabel
+        tty: true
+        stdin_open: true
+        networks:
+            - md_utils_net
 
-  utils_docking:
-    build:
-      context: utils_docking
-      dockerfile: Dockerfile
-      args:
-        - VERSION=2023.1.2
-        - IMAGE_VER=3.11-slim-bullseye
-    image: firesimulations/utils_docking:2023.1.2
-    container_name: utils_docking
-    tty: true
-    stdin_open: true
-    volumes:
-      - ./data:/data
-      - ./utils_docking/bin:/ubin
-    networks:
-      - md_utils_net
+    utils_docking:
+        build:
+            context: utils_docking
+            dockerfile: Dockerfile
+            args:
+                - VERSION=2023.1.2
+                - IMAGE_VER=3.11-slim-bullseye
+        image: firesimulations/utils_docking:2023.1.2
+        container_name: utils_docking
+        tty: true
+        stdin_open: true
+        volumes:
+            - ./data:/data
+            - ./utils_docking/bin:/ubin
+        networks:
+            - md_utils_net
 
-  utils_docking_gpu:
-    build:
-      context: utils_docking_gpu
-      dockerfile: Dockerfile
-      args:
-        - VERSION=2023.1.1
-        - IMAGE_VER=2020.06
-    image: firesimulations/utils_docking_gpu:2023.1.1
-    container_name: utils_docking_gpu
-    tty: true
-    stdin_open: true
-    volumes:
-      - ./data:/data
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
-    networks:
-      - md_utils_net
-  
-  utils_docking_master:
-    build:
-      context: utils_docking_gpu
-      dockerfile: Dockerfile.master
-      args:
-        - VERSION=2023.1.1
-        - IMAGE_VER=2020.06
-    image: firesimulations/utils_docking_master:2023.1.1
-    container_name: utils_docking_master
-    tty: true
-    stdin_open: true
-    volumes:
-      - ./data:/data
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
-    networks:
-      - md_utils_net
+    utils_docking_gpu:
+        build:
+            context: utils_docking_gpu
+            dockerfile: Dockerfile
+            args:
+                - VERSION=2023.1.1
+                - IMAGE_VER=2020.06
+        image: firesimulations/utils_docking_gpu:2023.1.1
+        container_name: utils_docking_gpu
+        tty: true
+        stdin_open: true
+        volumes:
+            - ./data:/data
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - capabilities: [gpu]
+        networks:
+            - md_utils_net
 
-  # utils_docking_gpu2:
-  #   build:
-  #     context: utils_docking_gpu
-  #     dockerfile: Dockerfile2
-  #     args:
-  #       - VERSION=2023.1.1
-  #       # - IMAGE_VER=11.8.0-runtime-ubuntu22.04
-  #       - IMAGE_VER=lunar-20221216
-  #   image: firesimulations/utils_docking_gpu2:2023.1.1
-  #   container_name: utils_docking_gpu2
-  #   tty: true
-  #   stdin_open: true
-  #   volumes:
-  #     - ./data:/data
-  #   deploy:
-  #     resources:
-  #       reservations:
-  #         devices:
-  #           - capabilities: [gpu]
-  #   networks:
-  #     - md_utils_net
+    utils_docking_master:
+        build:
+            context: utils_docking_gpu
+            dockerfile: Dockerfile.master
+            args:
+                - VERSION=2023.1.1
+                - IMAGE_VER=2020.06
+        image: firesimulations/utils_docking_master:2023.1.1
+        container_name: utils_docking_master
+        tty: true
+        stdin_open: true
+        volumes:
+            - ./data:/data
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - capabilities: [gpu]
+        networks:
+            - md_utils_net
 
-  utils_rxdock_conda:
-    build:
-      context: utils_rxdock
-      dockerfile: Dockerfile.conda
-      args:
-        - IMAGE_VER=22.11.1-alpine
-        - VERSION=2023.1.1
-    image: firesimulations/utils_rxdock:2023.1.1-conda
-    container_name: utils_rxdock_conda
-    tty: true
-    stdin_open: true
-    networks:
-      - md_utils_net
+    # utils_docking_gpu2:
+    #   build:
+    #     context: utils_docking_gpu
+    #     dockerfile: Dockerfile2
+    #     args:
+    #       - VERSION=2023.1.1
+    #       # - IMAGE_VER=11.8.0-runtime-ubuntu22.04
+    #       - IMAGE_VER=lunar-20230731
+    #   image: firesimulations/utils_docking_gpu2:2023.1.1
+    #   container_name: utils_docking_gpu2
+    #   tty: true
+    #   stdin_open: true
+    #   volumes:
+    #     - ./data:/data
+    #   deploy:
+    #     resources:
+    #       reservations:
+    #         devices:
+    #           - capabilities: [gpu]
+    #   networks:
+    #     - md_utils_net
 
-  fftw:
-    build:
-      context: gromacs
-      dockerfile: Dockerfile.fftw
-      args:
-        - UBUNTU_VER=lunar-20221216
-        - UBUNTU_BUILD_VER=22.04
-        - FFTW_VER=3.3.10
-        - GROMACS_VER=2022.4
-        - CMAKE_VER=3.25.1
-        - GCC_VER=11
-        - CUDA_VER=12.0.0
-        - OPENMPI_VER=4.1.4
-    image: firesimulations/fftw:3.3.10
-    container_name: fftw
-    tty: true
-    stdin_open: true
-    volumes:
-      - ./data:/data
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
-    networks:
-      - md_utils_net
+    utils_rxdock_conda:
+        build:
+            context: utils_rxdock
+            dockerfile: Dockerfile.conda
+            args:
+                - IMAGE_VER=22.11.1-alpine
+                - VERSION=2023.1.1
+        image: firesimulations/utils_rxdock:2023.1.1-conda
+        container_name: utils_rxdock_conda
+        tty: true
+        stdin_open: true
+        networks:
+            - md_utils_net
 
-  # gromacs-sse2:
-  #   build:
-  #     context: gromacs
-  #     dockerfile: Dockerfile.gmx.sse2
-  #     args:
-  #       - UBUNTU_VER=lunar-20221216
-  #       - UBUNTU_BUILD_VER=22.04
-  #       - FFTW_VER=3.3.10
-  #       - GROMACS_VER=2022.4
-  #       - CMAKE_VER=3.25.1
-  #       - GCC_VER=11
-  #       - CUDA_VER=12.0.0
-  #       - OPENMPI_VER=4.1.4
-  #   image: firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-sse2
-  #   container_name: gromacs-sse2
-  #   tty: true
-  #   stdin_open: true
-  #   volumes:
-  #     - ./data:/data
-  #   deploy:
-  #     resources:
-  #       reservations:
-  #         devices:
-  #           - capabilities: [gpu]
-  #   networks:
-  #     - md_utils_net
+    fftw:
+        build:
+            context: gromacs
+            dockerfile: Dockerfile.fftw
+            args:
+                - UBUNTU_VER=lunar-20230731
+                - UBUNTU_BUILD_VER=22.04
+                - FFTW_VER=3.3.10
+                - GROMACS_VER=2023.2
+                - CMAKE_VER=3.27.2
+                - GCC_VER=11
+                - CUDA_VER=12.2.2
+                - OPENMPI_VER=4.1.5
+        image: firesimulations/fftw:3.3.10
+        container_name: fftw
+        tty: true
+        stdin_open: true
+        volumes:
+            - ./data:/data
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - capabilities: [gpu]
+        networks:
+            - md_utils_net
 
-  gromacs:
-    build:
-      context: gromacs
-      dockerfile: Dockerfile
-      args:
-        - UBUNTU_VER=lunar-20221216
-        - UBUNTU_BUILD_VER=22.04
-        - FFTW_VER=3.3.10
-        - GROMACS_VER=2022.4
-        - CMAKE_VER=3.25.1
-        - GCC_VER=11
-        - CUDA_VER=12.0.0
-        - OPENMPI_VER=4.1.4
-    image: firesimulations/gromacs:gmx-2022.4-cuda-12.0.0
-    container_name: gromacs
-    tty: true
-    stdin_open: true
-    volumes:
-      - ./data:/data
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
-    networks:
-      - md_utils_net
+    # gromacs-sse2:
+    #   build:
+    #     context: gromacs
+    #     dockerfile: Dockerfile.gmx.sse2
+    #     args:
+    #       - UBUNTU_VER=lunar-20230731
+    #       - UBUNTU_BUILD_VER=22.04
+    #       - FFTW_VER=3.3.10
+    #       - GROMACS_VER=2023.2
+    #       - CMAKE_VER=3.27.2
+    #       - GCC_VER=11
+    #       - CUDA_VER=12.2.2
+    #       - OPENMPI_VER=4.1.5
+    #   image: firesimulations/gromacs:gmx-2022.4-cuda-12.2.2-sse2
+    #   container_name: gromacs-sse2
+    #   tty: true
+    #   stdin_open: true
+    #   volumes:
+    #     - ./data:/data
+    #   deploy:
+    #     resources:
+    #       reservations:
+    #         devices:
+    #           - capabilities: [gpu]
+    #   networks:
+    #     - md_utils_net
+
+    gromacs:
+        build:
+            context: gromacs
+            dockerfile: Dockerfile
+            args:
+                - UBUNTU_VER=lunar-20230731
+                - UBUNTU_BUILD_VER=22.04
+                - FFTW_VER=3.3.10
+                - GROMACS_VER=2023.2
+                - CMAKE_VER=3.27.2
+                - GCC_VER=11
+                - CUDA_VER=12.2.2
+                - OPENMPI_VER=4.1.5
+        image: firesimulations/gromacs:gmx-2023.2-cuda-12.2.2
+        container_name: gromacs
+        tty: true
+        stdin_open: true
+        volumes:
+            - ./data:/data
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - capabilities: [gpu]
+        networks:
+            - md_utils_net
 
 networks:
-  md_utils_net:
-    driver: bridge
+    md_utils_net:
+        driver: bridge

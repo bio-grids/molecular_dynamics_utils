@@ -1,95 +1,94 @@
 ---
-
 name: Build and push fftw and gromacs
 
 env:
-  fftw_repo: firesimulations/fftw
-  gromacs_repo: firesimulations/gromacs
-  FFTW_VER: 3.3.10
-  GROMACS_VER: 2023.2
-  CMAKE_VER: 3.27.2
-  GCC_VER: 11
-  CUDA_VER: 12.2.0
-  OPENMPI_VER: 4.1.5
-  UBUNTU_VER: lunar-20230731
-  UBUNTU_BUILD_VER: 22.04
+    fftw_repo: firesimulations/fftw
+    gromacs_repo: firesimulations/gromacs
+    FFTW_VER: 3.3.10
+    GROMACS_VER: 2023.2
+    CMAKE_VER: 3.27.2
+    GCC_VER: 11
+    CUDA_VER: 12.2.2
+    OPENMPI_VER: 4.1.5
+    UBUNTU_VER: lunar-20230731
+    UBUNTU_BUILD_VER: 22.04
 
 on:
-  push:
-    branches:
-      - 'docker'
+    push:
+        branches:
+            - "docker"
 
 jobs:
-  check-for-existing-fftw-image:
-    runs-on: ubuntu-latest
-    name: Check docker for fftw tag
-    outputs:
-      tag-exists: ${{steps.check-docker.outputs.tag-exists}}
-    steps:
-      - name: Check Docker for Tag
-        id: check-docker
-        uses: hipcamp/docker-tag-exists@v1
-        with:
-          image: ${{env.fftw_repo}}
-          tag: ${{env.FFTW_VER}}
-  fftw-docker:
-    runs-on: ubuntu-latest
-    name: Build and deploy fftw image
-    needs: check-for-existing-fftw-image
-    if: needs.check-for-existing-fftw-image.outputs.tag-exists != 'true'
-    steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_TOKEN}}
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          context: "{{defaultContext}}:gromacs"
-          file: "Dockerfile.fftw"
-          push: true
-          tags: ${{env.fftw_repo}}:${{env.FFTW_VER}},${{env.fftw_repo}}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+    check-for-existing-fftw-image:
+        runs-on: ubuntu-latest
+        name: Check docker for fftw tag
+        outputs:
+            tag-exists: ${{steps.check-docker.outputs.tag-exists}}
+        steps:
+            - name: Check Docker for Tag
+              id: check-docker
+              uses: hipcamp/docker-tag-exists@v1
+              with:
+                  image: ${{env.fftw_repo}}
+                  tag: ${{env.FFTW_VER}}
+    fftw-docker:
+        runs-on: ubuntu-latest
+        name: Build and deploy fftw image
+        needs: check-for-existing-fftw-image
+        if: needs.check-for-existing-fftw-image.outputs.tag-exists != 'true'
+        steps:
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v2
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v2
+            - name: Login to Docker Hub
+              uses: docker/login-action@v2
+              with:
+                  username: ${{secrets.DOCKERHUB_USERNAME}}
+                  password: ${{secrets.DOCKERHUB_TOKEN}}
+            - name: Build and push
+              uses: docker/build-push-action@v3
+              with:
+                  context: "{{defaultContext}}:gromacs"
+                  file: "Dockerfile.fftw"
+                  push: true
+                  tags: ${{env.fftw_repo}}:${{env.FFTW_VER}},${{env.fftw_repo}}:latest
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
 
-  check-for-existing-gromacs-image:
-    runs-on: ubuntu-latest
-    name: Check docker for gromacs tag
-    outputs:
-      tag-exists: ${{steps.check-docker.outputs.tag-exists}}
-    steps:
-      - name: Check Docker for Tag
-        id: check-docker
-        uses: hipcamp/docker-tag-exists@v1
-        with:
-          image: ${{env.gromacs_repo}}
-          tag: gmx-${{env.GROMACS_VER}}-cuda-${{env.CUDA_VER}}
-  gromacs-docker:
-    runs-on: ubuntu-latest
-    name: Build and deploy fftw image
-    needs: check-for-existing-gromacs-image
-    if: needs.check-for-existing-gromacs-image.outputs.tag-exists != 'true'
-    steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_TOKEN}}
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          context: "{{defaultContext}}:gromacs"
-          file: "Dockerfile"
-          push: true
-          tags: ${{env.gromacs_repo}}:gmx-${{env.GROMACS_VER}}-cuda-${{env.CUDA_VER}},${{env.gromacs_repo}}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+    check-for-existing-gromacs-image:
+        runs-on: ubuntu-latest
+        name: Check docker for gromacs tag
+        outputs:
+            tag-exists: ${{steps.check-docker.outputs.tag-exists}}
+        steps:
+            - name: Check Docker for Tag
+              id: check-docker
+              uses: hipcamp/docker-tag-exists@v1
+              with:
+                  image: ${{env.gromacs_repo}}
+                  tag: gmx-${{env.GROMACS_VER}}-cuda-${{env.CUDA_VER}}
+    gromacs-docker:
+        runs-on: ubuntu-latest
+        name: Build and deploy fftw image
+        needs: check-for-existing-gromacs-image
+        if: needs.check-for-existing-gromacs-image.outputs.tag-exists != 'true'
+        steps:
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v2
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v2
+            - name: Login to Docker Hub
+              uses: docker/login-action@v2
+              with:
+                  username: ${{secrets.DOCKERHUB_USERNAME}}
+                  password: ${{secrets.DOCKERHUB_TOKEN}}
+            - name: Build and push
+              uses: docker/build-push-action@v3
+              with:
+                  context: "{{defaultContext}}:gromacs"
+                  file: "Dockerfile"
+                  push: true
+                  tags: ${{env.gromacs_repo}}:gmx-${{env.GROMACS_VER}}-cuda-${{env.CUDA_VER}},${{env.gromacs_repo}}:latest
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max

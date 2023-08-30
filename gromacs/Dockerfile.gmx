@@ -1,17 +1,17 @@
 ARG UBUNTU_BUILD_VER=22.04
-ARG CUDA_VER=12.2.0
+ARG CUDA_VER=12.2.2
 
 FROM nvidia/cuda:${CUDA_VER}-base-ubuntu${UBUNTU_BUILD_VER}
 
 LABEL maintainer="DHN Chandan <biogrids.io@gmail.com>"
-LABEL version="2022.4"
+LABEL version="2023.2"
 LABEL github="https://github.com/bio-grids/molecular_dynamics_utils"
 
 ARG FFTW_VER=3.3.10
 ARG GROMACS_VER=2023.2
 ARG CMAKE_VER=3.27.2
 ARG GCC_VER=11
-ARG CUDA_VER=12.2.0
+ARG CUDA_VER=12.2.2
 ARG OPENMPI_VER=4.1.5
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -28,13 +28,13 @@ RUN apt-get install --yes --no-install-recommends --quiet $app_deps
 COPY --from=firesimulations/fftw:3.3.10 /usr/local/lib /usr/local/lib
 
 # copy compiled dependencies
-COPY --from=firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-sse2     /usr/local/cuda-12.0 /usr/local/cuda-12.0
-COPY --from=firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-sse2    /usr/local/openmpi /usr/local/openmpi
+COPY --from=firesimulations/gromacs:gmx-2023.2-cuda-12.2.2-sse2     /usr/local/cuda-12.2 /usr/local/cuda-12.2
+COPY --from=firesimulations/gromacs:gmx-2023.2-cuda-12.2.2-sse2    /usr/local/openmpi /usr/local/openmpi
 
 # add the GROMACS configurations
-COPY --from=firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-avx2     /usr/local/gromacs /gromacs
-COPY --from=firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-avx     /usr/local/gromacs /gromacs
-COPY --from=firesimulations/gromacs:gmx-2022.4-cuda-12.0.0-sse2     /usr/local/gromacs /gromacs
+COPY --from=firesimulations/gromacs:gmx-2023.2-cuda-12.2.2-avx2     /usr/local/gromacs /gromacs
+COPY --from=firesimulations/gromacs:gmx-2023.2-cuda-12.2.2-avx     /usr/local/gromacs /gromacs
+COPY --from=firesimulations/gromacs:gmx-2023.2-cuda-12.2.2-sse2     /usr/local/gromacs /gromacs
 
 # add architecture-detection script
 COPY ./scripts/gmx-chooser /gromacs/bin/gmx
