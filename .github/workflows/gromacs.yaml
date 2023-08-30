@@ -6,12 +6,12 @@ env:
   fftw_repo: firesimulations/fftw
   gromacs_repo: firesimulations/gromacs
   FFTW_VER: 3.3.10
-  GROMACS_VER: 2022.4
-  CMAKE_VER: 3.25.1
+  GROMACS_VER: 2023.2
+  CMAKE_VER: 3.27.2
   GCC_VER: 11
-  CUDA_VER: 12.0.0
-  OPENMPI_VER: 4.1.4
-  UBUNTU_VER: lunar-20221216
+  CUDA_VER: 12.2.0
+  OPENMPI_VER: 4.1.5
+  UBUNTU_VER: lunar-20230731
   UBUNTU_BUILD_VER: 22.04
 
 on:
@@ -56,7 +56,7 @@ jobs:
           tags: ${{env.fftw_repo}}:${{env.FFTW_VER}},${{env.fftw_repo}}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-  
+
   check-for-existing-gromacs-image:
     runs-on: ubuntu-latest
     name: Check docker for gromacs tag
